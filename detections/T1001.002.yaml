@@ -23,13 +23,11 @@ detections:
           The detection counts distinct binaries executed by the same parent process and triggers when more than 3 unique utilities are observed within a short time window. The corresponding Atomic Red Team test is composed of 2 logical stages: the first creates a modified image containing an embedded script, and the second extracts and executes the embedded payload.
           By requiring more than 3 distinct utilities, the query is designed to trigger both when the full test chain is executed end-to-end or when only the extraction and execution stage runs, assuming the modified image already exists on disk.
         query: |
-          count by (hostname, ppid) (
+          count by (hostname, ppid)(
             sum by (hostname, ppid, exe) (
-              count_over_time(
-                {service_name="fluentbit-audit"}
-                | logfmt
-                | exe =~ "/usr/bin/(cat|base64|xxd|sed|xargs|tail|strings|bash)"
-                [10s] #short time window
+              count_over_time({service_name="fluentbit-audit", type="EXECVE"} 
+                | logfmt 
+                | exe =~ "/usr/bin/(cat|base64|xxd|sed|xargs|tail|strings|bash)" [10s]
               )
             )
           ) > 3
