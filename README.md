@@ -2,12 +2,11 @@
 <img width="368" height="200" alt="main image" src="https://github.com/user-attachments/assets/da30458c-c6ba-4193-8fb2-87e165ad82a1" />
 
 # Auditd, Fluentbit, Loki, Grafana, Atomic
-A fully open-source security stack for detecting Atomic Red Team simulations. Using Fluentbit, Loki, and Grafana to transform Auditd logs into adversary insights.
+A fully open-source security stack for detecting Atomic Red Team simulations. Using Fluentbit, Loki, and Grafana to transform auditd logs into adversary insights.
 
 ## Stack Overview
 
 <img width="736" height="400" alt="stack image" src="https://github.com/user-attachments/assets/f4eb700a-5d31-4413-8a63-ba7d0fa4e2b4" />
-
 
 | Component  | Description |
 |------------|-------------|
@@ -17,7 +16,11 @@ A fully open-source security stack for detecting Atomic Red Team simulations. Us
 | **Grafana** | Visualization and alerting layer used to monitor Atomic Red Team activity and validate detection coverage in near real time. |
 
 ## Screenshots
+The screenshot below highlights the Grafana Explore interface, which provides full visibility into auditd events ingested into Loki. 
+
 ![grafana explore](images/grafana.png)
+
+This view enables fast detection tuning and exploratory analysis, making it easier to understand complex behaviors and transform raw telemetry into reliable detections.
 
 ## Quick Start
 todo
