@@ -1,0 +1,63 @@
+service:
+    flush: 1
+    log_level: info
+    parsers_file: parsers.yaml
+
+
+pipeline:
+  inputs:
+    - name: tail
+      tag: osquery
+      path: /var/log/osquery/*.log
+      parser: osquery_parser
+      processors:
+        logs:
+          - name: lua
+            script: extract_record.lua
+            call: extract_record
+          - name: content_modifier
+            action: insert
+            key: "hostname"
+            value: ${HOSTNAME}
+
+
+  inputs:
+    - name: tail
+      tag: audit
+      path: /var/log/audit/audit.log
+      parser: audit_parser
+      processors:
+        logs:
+          - name: content_modifier
+            action: insert
+            key: "hostname"
+            value: ${HOSTNAME}
+          - name: lua
+            script: audit_timestamp_seqid.lua
+            call: audit_timestamp_seqid
+          - name: lua
+            script: hex.lua
+            call: hex
+
+#  filters:
+#    - name: geoip2
+#      match: audit
+#      database: /etc/fluent-bit/GeoLite2-City.mmdb
+#      lookup_key: laddr
+#      record:
+#        - country laddr %{country.names.en}
+#        - isocode laddr %{country.iso_code}
+#        - latitude laddr %{location.latitude}
+#        - longitude laddr %{location.longitude}
+
+  outputs:
+    - name: loki
+      match: audit
+      labels: service_name=fluentbit-audit, $type, $hostname
+      line_format: key_value
+
+  outputs:
+    - name: loki
+      match: osquery
+      labels: service_name=fluentbit-osquery, $name, $hostname
+      line_format: key_value

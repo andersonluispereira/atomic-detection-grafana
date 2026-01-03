@@ -1,0 +1,5 @@
+parsers:
+  - name: audit_parser
+    format: logfmt
+  - name: osquery_parser
+    format: json
